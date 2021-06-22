@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : Character
 {
     [Header("Movement")]
-    public float speed;
+    public float speed;    
 
     void Start()
     {
@@ -16,6 +16,7 @@ public class Enemy : Character
     void Update()
     {
         transform.Translate(Vector3.left * speed * Time.deltaTime);
+        
     }
 
     public override void Shoot()
@@ -28,7 +29,9 @@ public class Enemy : Character
         base.TakeDamage(damage);
         if (health <= 0)
         {
-            Destroy(this.gameObject);
+            this.transform.GetComponentInParent<PoolManager>().AddNewEnemyToIdlePool(this.gameObject);
+            this.transform.GetComponentInParent<PoolManager>().RemoveObjectFromPool(this.gameObject);
+            this.gameObject.SetActive(false);
         }
     }
     

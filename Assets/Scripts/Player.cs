@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : Character
 {
@@ -22,18 +23,34 @@ public class Player : Character
 
     private Vector3 _initialPosition;
     private Vector3 _jumpVelocity = Vector3.zero;
+    private Animator _animator;
     int counter = 0;
+
+    [SerializeField]
+    private int _totalCactus = 0;   
+
+    [Header("UI")]
+    [SerializeField]
+    private Text cactusCounterText;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        _animator = GetComponent<Animator>();
         _initialPosition = transform.localPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+        if (rb.velocity.y < 0 && !_isGrounded)
+        {
+            // rb.velocity += Vector3.up * Physics.gravity.y * (_jumpFallMultiplier*Time.fixedDeltaTime);
+            //rb.velocity += (Vector3.up * (_jumpFallMultiplier));
+            //rb.AddForce(Physics.gravity * _jumpFallMultiplier, ForceMode.Acceleration);
+            _animator.SetTrigger("Falling");
+        }
+        //Debug.Log(rb.velocity.y);
     }
 
     private void FixedUpdate()
@@ -43,9 +60,11 @@ public class Player : Character
             // rb.velocity += Vector3.up * Physics.gravity.y * (_jumpFallMultiplier*Time.fixedDeltaTime);
             //rb.velocity += (Vector3.up * (_jumpFallMultiplier));
             //rb.AddForce(Physics.gravity * _jumpFallMultiplier, ForceMode.Acceleration);
-
+            _animator.SetBool("isFalling", true);
+            _animator.SetBool("isJumping", false);
+            Debug.Log(rb.velocity.y);
         }
-        Debug.Log(rb.velocity.y );
+       
         //  Debug.Log(Time.fixedDeltaTime);
 
         if (Time.time<1f)
@@ -62,6 +81,7 @@ public class Player : Character
 
     public void Jump()
     {
+      
         try
         {           
             if (_isGrounded && !_isFirstJump)
@@ -69,13 +89,17 @@ public class Player : Character
                  rb.AddForce(Vector3.up * _jumpForce);               
                 _isGrounded = false;
                 _isFirstJump = true;
+                _animator.SetBool("isJumping", true);
+                _animator.SetBool("isFalling", false);
             }
 
             else if (!_isGrounded && _isFirstJump)
             {                
 
-                rb.AddForce(Vector3.up * _jumpForce);
+                rb.AddForce(Vector3.up * (_jumpForce/1.5f));
                 _isFirstJump = false;
+                _animator.SetBool("isJumping", true);
+                _animator.SetBool("isFalling", false);
             }
         }
 
@@ -101,13 +125,18 @@ public class Player : Character
 
     public void ResetDuck()
     {
-        transform.localScale = Vector3.one;
+        transform.localScale = Vector3.one *0.7f;
         transform.localPosition = _initialPosition;
     }
 
     public override void Shoot()
     {
-        base.Shoot();
+        if(!(_totalCactus<=0))
+        {
+            base.Shoot();
+            DecreaseCactus(1);
+        }
+      
     }
 
     public override void TakeDamage(int damage)
@@ -132,9 +161,33 @@ public class Player : Character
             _isGrounded = true;
             _isFirstJump = false;
             PlayerButtonHandlers.instance._jumpButtonCounter = 0;
+            _animator.SetTrigger("FellDown");
             Physics.gravity = new Vector3(0, -9.8f, 0);
         }      
     }
-   
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Collectables"))
+        {
+            IncreaseCactus(1);           
+            collision.transform.GetComponentInParent<PoolManager>().AddNewEnemyToIdlePool(collision.gameObject);
+            collision.transform.GetComponentInParent<PoolManager>().RemoveObjectFromPool(collision.gameObject);
+            collision.gameObject.SetActive(false);
+        }
+    }
+
+    private void IncreaseCactus(int n)
+    {
+        _totalCactus += n;
+        cactusCounterText.text = _totalCactus.ToString();
+    }
+
+    private void DecreaseCactus(int n)
+    {
+        _totalCactus -= n;
+        cactusCounterText.text = _totalCactus.ToString();
+    }
+
 
 }

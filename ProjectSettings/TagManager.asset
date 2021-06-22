@@ -7,6 +7,9 @@ TagManager:
   - Ground
   - Enemy
   - Bullet
+  - ObjectDestroyer
+  - Undefined
+  - Collectables
   layers:
   - Default
   - TransparentFX
