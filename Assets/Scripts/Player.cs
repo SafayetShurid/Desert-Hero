@@ -4,10 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+public enum PlayerState
+{
+    PLAYER_DEAD,
+    PLAYER_JUMP,
+    PLAYER_DOUBLE_JUMP,
+    PLAYER_RUNNING,
+    PLAYER_DUCK,
+    PLAYER_SHOOT
+
+}
+
 public class Player : Character
 {
 
-    private Rigidbody rb;
+    private Rigidbody _rb;
+
+    public PlayerState playerState = PlayerState.PLAYER_RUNNING;
 
     [Header("Jumping")]
     [SerializeField]
@@ -24,18 +38,23 @@ public class Player : Character
     private Vector3 _initialPosition;
     private Vector3 _jumpVelocity = Vector3.zero;
     private Animator _animator;
-    int counter = 0;
-
+    
+    [Header("Stats")]
     [SerializeField]
-    private int _totalCactus = 0;   
+    private int _totalCactus = 0;
+   
 
     [Header("UI")]
     [SerializeField]
     private Text cactusCounterText;
+    [SerializeField]
+    private Text healthText;
+
+
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
         _initialPosition = transform.localPosition;
     }
@@ -43,39 +62,33 @@ public class Player : Character
     // Update is called once per frame
     void Update()
     {
-        if (rb.velocity.y < 0 && !_isGrounded)
+        if (_rb.velocity.y < 0 && !_isGrounded)
         {
-            // rb.velocity += Vector3.up * Physics.gravity.y * (_jumpFallMultiplier*Time.fixedDeltaTime);
-            //rb.velocity += (Vector3.up * (_jumpFallMultiplier));
-            //rb.AddForce(Physics.gravity * _jumpFallMultiplier, ForceMode.Acceleration);
-            _animator.SetTrigger("Falling");
+            // _rb.velocity += Vector3.up * Physics.gravity.y * (_jumpFallMultiplier*Time.fixedDeltaTime);
+            //_rb.velocity += (Vector3.up * (_jumpFallMultiplier));
+            //_rb.AddForce(Physics.gravity * _jumpFallMultiplier, ForceMode.Acceleration);
+          
         }
-        //Debug.Log(rb.velocity.y);
+        //Debug.Log(_rb.velocity.y);
     }
 
     private void FixedUpdate()
     {
-        if (rb.velocity.y < 0 && !_isGrounded)
+        if (_rb.velocity.y < 0 && !_isGrounded)
         {
-            // rb.velocity += Vector3.up * Physics.gravity.y * (_jumpFallMultiplier*Time.fixedDeltaTime);
-            //rb.velocity += (Vector3.up * (_jumpFallMultiplier));
-            //rb.AddForce(Physics.gravity * _jumpFallMultiplier, ForceMode.Acceleration);
+            // _rb.velocity += Vector3.up * Physics.gravity.y * (_jumpFallMultiplier*Time.fixedDeltaTime);
+            //_rb.velocity += (Vector3.up * (_jumpFallMultiplier));
+            //_rb.AddForce(Physics.gravity * _jumpFallMultiplier, ForceMode.Acceleration);
             _animator.SetBool("isFalling", true);
             _animator.SetBool("isJumping", false);
-            Debug.Log(rb.velocity.y);
-        }
-       
-        //  Debug.Log(Time.fixedDeltaTime);
-
-        if (Time.time<1f)
-        {
-            counter++;
            
         }
+       
+       
 
         
 
-        rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
 
     }
 
@@ -86,7 +99,8 @@ public class Player : Character
         {           
             if (_isGrounded && !_isFirstJump)
             {
-                 rb.AddForce(Vector3.up * _jumpForce);               
+                playerState = PlayerState.PLAYER_JUMP;
+                 _rb.AddForce(Vector3.up * _jumpForce);               
                 _isGrounded = false;
                 _isFirstJump = true;
                 _animator.SetBool("isJumping", true);
@@ -94,13 +108,15 @@ public class Player : Character
             }
 
             else if (!_isGrounded && _isFirstJump)
-            {                
-
-                rb.AddForce(Vector3.up * (_jumpForce/1.5f));
+            {
+                playerState = PlayerState.PLAYER_DOUBLE_JUMP;
+                _rb.AddForce(Vector3.up * (_jumpForce/1.5f));
                 _isFirstJump = false;
                 _animator.SetBool("isJumping", true);
                 _animator.SetBool("isFalling", false);
             }
+
+            PlayerButtonHandlers.instance.duckButton.interactable = false;
         }
 
         catch(Exception e)
@@ -113,20 +129,30 @@ public class Player : Character
     }
 
     public void Duck()
-    {
-        Vector3 newScale = transform.localScale;
-        newScale.y = 0.5f;
-        transform.localScale = newScale;
+    {        
+        if(playerState.Equals(PlayerState.PLAYER_RUNNING))
+        {
+            Vector3 newScale = transform.localScale;
+            newScale.y = 0.35f;
+            transform.localScale = newScale;
 
-        Vector3 newPosition = transform.localPosition;
-        newPosition.y = -0.5f;
-        transform.localPosition = newPosition;
+            Vector3 newPosition = transform.localPosition;
+            newPosition.y = -0.35f;
+            transform.localPosition = newPosition;
+            playerState = PlayerState.PLAYER_DUCK;
+        }
+        
     }
 
     public void ResetDuck()
     {
-        transform.localScale = Vector3.one *0.7f;
-        transform.localPosition = _initialPosition;
+        if (playerState.Equals(PlayerState.PLAYER_DUCK))
+        {
+            transform.localScale = Vector3.one * 0.7f;
+            transform.localPosition = _initialPosition;
+            playerState = PlayerState.PLAYER_RUNNING;
+        }
+            
     }
 
     public override void Shoot()
@@ -142,9 +168,11 @@ public class Player : Character
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
+        healthText.text = health.ToString();
         if (health <= 0)
         {
-            Destroy(this.gameObject);
+            playerState = PlayerState.PLAYER_DEAD;
+            this.gameObject.SetActive(false);
         }
     }
 
@@ -153,15 +181,18 @@ public class Player : Character
         if (collision.gameObject.CompareTag("Enemy"))
         {
             TakeDamage(1);
-            Destroy(collision.gameObject);
+            collision.transform.GetComponentInParent<PoolManager>().AddNewEnemyToIdlePool(collision.gameObject);
+            collision.transform.GetComponentInParent<PoolManager>().RemoveObjectFromPool(collision.gameObject);
+            collision.gameObject.SetActive(false);
         }
 
         if (collision.gameObject.CompareTag("Ground"))
         {
+            playerState =  playerState.Equals(PlayerState.PLAYER_DUCK) ? PlayerState.PLAYER_DUCK : PlayerState.PLAYER_RUNNING;
             _isGrounded = true;
             _isFirstJump = false;
-            PlayerButtonHandlers.instance._jumpButtonCounter = 0;
-            _animator.SetTrigger("FellDown");
+            PlayerButtonHandlers.instance.jumpButtonCounter = 0;
+            PlayerButtonHandlers.instance.duckButton.interactable = true;          
             Physics.gravity = new Vector3(0, -9.8f, 0);
         }      
     }

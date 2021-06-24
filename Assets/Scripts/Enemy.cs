@@ -4,24 +4,40 @@ using UnityEngine;
 
 public class Enemy : Character
 {
-    [Header("Movement")]
-    public float speed;    
+    
+    public Player player;
+    private bool _shootOnce = false;
 
     void Start()
     {
-        InvokeRepeating("Shoot", 1, 3);
+        //InvokeRepeating("Shoot", 1, 3);
+        player = FindObjectOfType<Player>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.left * speed * Time.deltaTime);
-        
+        Move();
+        Shoot();
+    }
+
+    private void OnEnable()
+    {
+        transform.rotation = Quaternion.Euler(0, -45f, 0);
     }
 
     public override void Shoot()
     {
-        base.Shoot();
+        if(!player.playerState.Equals(PlayerState.PLAYER_DEAD))
+        {
+            if (Vector3.Distance(transform.position, player.transform.position) < 15f && !_shootOnce)
+            {
+                base.Shoot();
+                _shootOnce = true;
+            }
+        }
+       
+       
     }
 
     public override void TakeDamage(int damage)
@@ -34,5 +50,10 @@ public class Enemy : Character
             this.gameObject.SetActive(false);
         }
     }
-    
+
+    private void OnDisable()
+    {
+        _shootOnce = false;
+    }
+
 }

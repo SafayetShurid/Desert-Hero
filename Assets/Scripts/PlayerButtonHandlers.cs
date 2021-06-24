@@ -6,13 +6,12 @@ using UnityEngine.UI;
 public class PlayerButtonHandlers : MonoBehaviour
 {
     [SerializeField]
-    private Player player;
-    [SerializeField]
-    private Player player2;
-
-   
-    public Button _jumpButton;
-    public int _jumpButtonCounter = 0;
+    private Player player;    
+  
+    public Button jumpButton;
+    public Button duckButton;
+    public Button shootButton;
+    public int jumpButtonCounter = 0;
 
     public static PlayerButtonHandlers instance;
 
@@ -31,14 +30,11 @@ public class PlayerButtonHandlers : MonoBehaviour
 
     public void Jump()
     {
-        _jumpButtonCounter++;
-        if (_jumpButtonCounter < 3)
+        jumpButtonCounter++;
+        if (jumpButtonCounter < 3)
         {
             player.Jump();
         }
-
-
-
 
     }
 

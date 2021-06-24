@@ -7,7 +7,11 @@ public abstract class Character : MonoBehaviour
     [Header("Basic Attributes")]
     public int health;
     public string characterName;
-   
+
+    [Header("Movement")]
+    [SerializeField]
+    protected float moveSpeed;
+
 
     [Header("Shooting")]
     [SerializeField]
@@ -20,19 +24,7 @@ public abstract class Character : MonoBehaviour
     protected float bulletSpeed;
     [SerializeField]
     protected float bulletDamage;
-
-
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  
 
     public virtual void Shoot()
     {
@@ -40,6 +32,11 @@ public abstract class Character : MonoBehaviour
         bullet.GetComponent<Bullet>().speed = bulletSpeed;
         bullet.GetComponent<Bullet>().direction = bulletDirection;
 
+    }
+
+    public virtual void Move()
+    {
+        transform.Translate(Vector3.left * moveSpeed * Time.deltaTime,Space.World);
     }
 
     public virtual void TakeDamage(int damage)

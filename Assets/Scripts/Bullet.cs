@@ -33,21 +33,26 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(_direction * Time.deltaTime * speed, Space.World);              
+        transform.Translate(_direction * Time.deltaTime * speed, Space.World);
+       
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Player"))
+       
+        if(other.gameObject.CompareTag("Enemy"))
+        {
+            other.GetComponent<Character>().TakeDamage(1);
+            Destroy(this.gameObject);
+            ScoreManager.instance.IncreaseScore(10);         
+        }
+
+        if (other.gameObject.CompareTag("Player"))
         {
             other.GetComponent<Character>().TakeDamage(1);
             Destroy(this.gameObject);
         }
 
-        else if (other.gameObject.CompareTag("Enemy"))
-        {
-            other.GetComponent<Character>().TakeDamage(1);            
-        }
-
+       
     }
 }
