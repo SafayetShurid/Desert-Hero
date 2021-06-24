@@ -5,11 +5,15 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    
-    public int score = 0;
 
+    public int score = 0;
     public static ScoreManager instance;
     public Text scoreText;
+
+    [SerializeField]
+    private int scoreAmount;
+    [SerializeField]
+    private int waitAmount;
 
     private void Awake()
     {
@@ -21,13 +25,13 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating("IncreaseScore", 2, 2);
+        StartCoroutine(IncreaseScore());
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void IncreaseScore(int amount)
@@ -36,9 +40,14 @@ public class ScoreManager : MonoBehaviour
         scoreText.text = score.ToString();
     }
 
-    public void IncreaseScore()
+    public IEnumerator IncreaseScore()
     {
-        score += 2;
-        scoreText.text = score.ToString();
+        while (true)
+        {
+            yield return new WaitForSeconds(waitAmount);
+            score += scoreAmount;
+            scoreText.text = score.ToString();
+        }
     }
 }
+

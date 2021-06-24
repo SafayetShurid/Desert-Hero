@@ -30,10 +30,7 @@ public class Player : Character
     [SerializeField]
     private bool _isGrounded;
     [SerializeField]
-    private bool _isFirstJump;
-    [SerializeField]
-    [Range(0.1f,10)]
-    private float _jumpFallMultiplier;
+    private bool _isFirstJump;   
 
     private Vector3 _initialPosition;
     private Vector3 _jumpVelocity = Vector3.zero;
@@ -50,6 +47,14 @@ public class Player : Character
     [SerializeField]
     private Text healthText;
 
+    [Header("Sounds")]
+    [SerializeField]
+    private AudioClip _shootingClip;
+    [SerializeField]
+    private AudioSource _audioSource;
+
+
+
 
 
     void Start()
@@ -57,36 +62,17 @@ public class Player : Character
         _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
         _initialPosition = transform.localPosition;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (_rb.velocity.y < 0 && !_isGrounded)
-        {
-            // _rb.velocity += Vector3.up * Physics.gravity.y * (_jumpFallMultiplier*Time.fixedDeltaTime);
-            //_rb.velocity += (Vector3.up * (_jumpFallMultiplier));
-            //_rb.AddForce(Physics.gravity * _jumpFallMultiplier, ForceMode.Acceleration);
-          
-        }
-        //Debug.Log(_rb.velocity.y);
-    }
+        _audioSource = GetComponent<AudioSource>();
+    }    
 
     private void FixedUpdate()
     {
         if (_rb.velocity.y < 0 && !_isGrounded)
-        {
-            // _rb.velocity += Vector3.up * Physics.gravity.y * (_jumpFallMultiplier*Time.fixedDeltaTime);
-            //_rb.velocity += (Vector3.up * (_jumpFallMultiplier));
-            //_rb.AddForce(Physics.gravity * _jumpFallMultiplier, ForceMode.Acceleration);
+        {   
             _animator.SetBool("isFalling", true);
             _animator.SetBool("isJumping", false);
-           
+            
         }
-       
-       
-
-        
 
         _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
 
@@ -157,10 +143,12 @@ public class Player : Character
 
     public override void Shoot()
     {
+
         if(!(_totalCactus<=0))
         {
             base.Shoot();
             DecreaseCactus(1);
+            _audioSource.PlayOneShot(_shootingClip);
         }
       
     }
@@ -172,7 +160,11 @@ public class Player : Character
         if (health <= 0)
         {
             playerState = PlayerState.PLAYER_DEAD;
+            MenuManager.instance.ShowGameOverPanel();
+            ScoreManager.instance.StopAllCoroutines();
             this.gameObject.SetActive(false);
+            
+            
         }
     }
 
@@ -192,8 +184,7 @@ public class Player : Character
             _isGrounded = true;
             _isFirstJump = false;
             PlayerButtonHandlers.instance.jumpButtonCounter = 0;
-            PlayerButtonHandlers.instance.duckButton.interactable = true;          
-            Physics.gravity = new Vector3(0, -9.8f, 0);
+            PlayerButtonHandlers.instance.duckButton.interactable = true;                      
         }      
     }
 
@@ -212,12 +203,17 @@ public class Player : Character
     {
         _totalCactus += n;
         cactusCounterText.text = _totalCactus.ToString();
+        PlayerButtonHandlers.instance.shootButton.interactable = true;
     }
 
     private void DecreaseCactus(int n)
     {
         _totalCactus -= n;
         cactusCounterText.text = _totalCactus.ToString();
+        if (_totalCactus <= 0)
+        {
+            PlayerButtonHandlers.instance.shootButton.interactable = false;
+        }
     }
 
 

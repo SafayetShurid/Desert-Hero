@@ -59,12 +59,12 @@ public class SpawnManager : MonoBehaviour
     private void IncreaseSpawnRate()
     {
         minimumTimebetweenObjects -= decreaseRate;
-        //minimumTimebetweenObjects = Mathf.Clamp(minimumTimebetweenObjects, 0.5f, 3.5f);
+        minimumTimebetweenObjects = Mathf.Clamp(minimumTimebetweenObjects, 3.5f, 10f);
     }
 
     void SpawnEnemy()
     {
-        Debug.Log(poolManager.GetActiveObjectSize());
+       
         if(poolManager.GetActiveObjectSize()<objectLimit)
         {
             GameObject gO;
@@ -100,8 +100,7 @@ public class SpawnManager : MonoBehaviour
             SpawnEnemy();
             if(!spawnRandomly)
             {
-                yield return new WaitForSeconds(minimumTimebetweenObjects);
-                Debug.Log(minimumTimebetweenObjects);
+                yield return new WaitForSeconds(minimumTimebetweenObjects);              
 
             }
             else

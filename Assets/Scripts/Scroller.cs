@@ -9,7 +9,11 @@ public class Scroller : MonoBehaviour
 
     void Start()
     {
-        
+        if(GameEvent.instance!=null)
+        {
+            GameEvent.instance.GameSpeedIncrease += SpeedIncrease;
+        }
+       
     }
 
     // Update is called once per frame
@@ -20,5 +24,10 @@ public class Scroller : MonoBehaviour
         {
             transform.position = new Vector3(40f, transform.position.y, transform.position.z);
         }
+    }
+
+    public void SpeedIncrease()
+    {
+        _speed += 1;
     }
 }

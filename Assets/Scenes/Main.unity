@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: fe3d55186e63c994d8be3316862c3db8, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -404,11 +404,11 @@ RectTransform:
   m_Father: {fileID: 2037705034}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 93, y: 63}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -102, y: 84}
   m_SizeDelta: {x: 196.6842, y: 196.6842}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &180200630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,7 +448,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 180200631}
   m_OnClick:
     m_PersistentCalls:
@@ -510,6 +510,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1423382052}
     m_Modifications:
+    - target: {fileID: 3288203174681368316, guid: 375db267875ce864e9a0292810e76092, type: 3}
+      propertyPath: _speed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5460663247279261650, guid: 375db267875ce864e9a0292810e76092, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -571,7 +575,7 @@ GameObject:
   - component: {fileID: 221383233}
   - component: {fileID: 221383232}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: ScoreManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -591,6 +595,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   score: 0
   scoreText: {fileID: 1120798783}
+  scoreAmount: 2
+  waitAmount: 1
 --- !u!4 &221383233
 Transform:
   m_ObjectHideFlags: 0
@@ -761,10 +767,11 @@ MonoBehaviour:
   _jumpForce: 300
   _isGrounded: 1
   _isFirstJump: 0
-  _jumpFallMultiplier: 5
   _totalCactus: 0
   cactusCounterText: {fileID: 1121108045}
   healthText: {fileID: 883245309}
+  _shootingClip: {fileID: 8300000, guid: 89f67823dae27a744b04dd93a483df98, type: 3}
+  _audioSource: {fileID: 0}
 --- !u!136 &325196340
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -784,6 +791,102 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 776883070312361016, guid: 50c549939b9529d49b9eae59fc1d0fd3, type: 3}
   m_PrefabInstance: {fileID: 814541574}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &325196343
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325196337}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: ee7a4c40fc1f3c742a1ea968ce280fda, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &355799686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1434,8 +1537,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6eec1ab9c67e214a976226fe1a661cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idlePoolSize: 5
-  activePoolSize: 2
+  idlePoolSize: 4
+  activePoolSize: 4
 --- !u!114 &703022371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1449,12 +1552,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectPrefab: {fileID: 5863247461101014051, guid: b04444a9d8c791f4bbf0a0dcd69594bc, type: 3}
-  minimumTimebetweenObjects: 8
+  minimumTimebetweenObjects: 6.5
   spawnPoints:
   - {fileID: 260545780}
-  objectLimit: 2
-  decreaseRate: 0.1
-  decreaseWaitTime: 3
+  objectLimit: 4
+  decreaseRate: 0.05
+  decreaseWaitTime: 2
   spawnRandomly: 0
   randWaitMinimum: 0
   randWaitMaximum: 0
@@ -1788,6 +1891,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 883245307}
   m_CullTransparentMesh: 1
+--- !u!1 &893918657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 893918658}
+  - component: {fileID: 893918659}
+  m_Layer: 0
+  m_Name: GameEvent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &893918658
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893918657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: -18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &893918659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893918657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66c0bfe5853566a4cb238d6b984b9083, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2421,11 +2567,11 @@ RectTransform:
   m_Father: {fileID: 2037705034}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -285, y: 67}
-  m_SizeDelta: {x: 146.5688, y: 147.9919}
-  m_Pivot: {x: 1, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 343, y: 92}
+  m_SizeDelta: {x: 146.56885, y: 147.9919}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1212390817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2999,7 +3145,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1416517889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3055,10 +3201,10 @@ RectTransform:
   m_Father: {fileID: 2037705034}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 800, y: 514.59033}
-  m_SizeDelta: {x: 920.8101, y: 518.5586}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 920.81006, y: 518.5586}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1423382051
 GameObject:
@@ -3166,7 +3312,7 @@ GameObject:
   - component: {fileID: 1593932035}
   - component: {fileID: 1593932034}
   m_Layer: 0
-  m_Name: Rayman 3 Soundtrack - ...Disco Jam
+  m_Name: BackgroundSound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3186,7 +3332,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -3771,11 +3917,11 @@ RectTransform:
   m_Father: {fileID: 2037705034}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -52, y: 88.31787}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 92, y: 91}
   m_SizeDelta: {x: 207, y: 208}
-  m_Pivot: {x: 1, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1863401547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3961,14 +4107,12 @@ MonoBehaviour:
   minimumTimebetweenObjects: 0
   spawnPoints:
   - {fileID: 1642219575}
-  - {fileID: 1334844753}
-  - {fileID: 1128057338}
   objectLimit: 3
   decreaseRate: 0
   decreaseWaitTime: 0
   spawnRandomly: 1
-  randWaitMinimum: 3
-  randWaitMaximum: 6
+  randWaitMinimum: 7
+  randWaitMaximum: 9
 --- !u!114 &1985673359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4240,6 +4384,10 @@ PrefabInstance:
     - target: {fileID: 2041857904606270371, guid: 375db267875ce864e9a0292810e76092, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3288203174681368316, guid: 375db267875ce864e9a0292810e76092, type: 3}
+      propertyPath: _speed
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5460663247279261650, guid: 375db267875ce864e9a0292810e76092, type: 3}
       propertyPath: m_RootOrder

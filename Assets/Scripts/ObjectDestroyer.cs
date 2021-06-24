@@ -5,17 +5,6 @@ using UnityEngine;
 public class ObjectDestroyer : MonoBehaviour
 {
 
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Collectables")

@@ -9,7 +9,7 @@ public class Collectables : MonoBehaviour
 
     void Start()
     {
-        
+        GameEvent.instance.GameSpeedIncrease += SpeedIncrease;
     }
 
     // Update is called once per frame
@@ -17,5 +17,10 @@ public class Collectables : MonoBehaviour
     {
         transform.Rotate(0f, 1f, 0f,Space.Self);
         transform.Translate(Vector3.left * Time.deltaTime* _speed,Space.World);
+    }
+
+    public void SpeedIncrease()
+    {       
+        _speed += 1;
     }
 }

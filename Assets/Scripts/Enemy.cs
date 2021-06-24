@@ -12,6 +12,7 @@ public class Enemy : Character
     {
         //InvokeRepeating("Shoot", 1, 3);
         player = FindObjectOfType<Player>();
+        GameEvent.instance.GameSpeedIncrease += SpeedIncrease;
     }
 
     // Update is called once per frame
@@ -19,16 +20,24 @@ public class Enemy : Character
     {
         Move();
         Shoot();
+       
     }
 
     private void OnEnable()
     {
         transform.rotation = Quaternion.Euler(0, -45f, 0);
+       
+    }
+
+    public void SpeedIncrease()
+    {
+        bulletSpeed += 1;
+        moveSpeed += 1;
     }
 
     public override void Shoot()
     {
-        if(!player.playerState.Equals(PlayerState.PLAYER_DEAD))
+        if(player!=null)
         {
             if (Vector3.Distance(transform.position, player.transform.position) < 15f && !_shootOnce)
             {

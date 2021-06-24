@@ -1023,7 +1023,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 1
   characterName: 
-  moveSpeed: 4
+  moveSpeed: 5
   bulletPrefab: {fileID: 7551707790172915286, guid: 8c3d6f98f7541bf45965a2485f9d83cd, type: 3}
   shootingPosition: {fileID: 4957402334055801293}
   bulletDirection: 1
