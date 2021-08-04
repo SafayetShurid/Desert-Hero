@@ -28,6 +28,30 @@ public class PlayerButtonHandlers : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Shoot();
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Duck(true);
+        }
+
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            player.ResetDuck();
+        }
+    }
+
     public void Jump()
     {
         jumpButtonCounter++;
